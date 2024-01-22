@@ -13,11 +13,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.ThumbUp
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.ThumbUp
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -26,6 +34,12 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -54,6 +68,26 @@ class MainActivity : ComponentActivity() {
 @ExperimentalMaterial3Api
 @Composable
 fun ComposeBody(name: String, modifier: Modifier = Modifier) {
+    val navigationItems = listOf<BottomNavigationBarItem>(
+        BottomNavigationBarItem(
+        title = "Categories",
+        selectedIcon = Icons.Filled.Home,
+        unselectedIcon = Icons.Outlined.Home,
+        hasNews = false,
+       badgeCount = null
+    ),
+        BottomNavigationBarItem(
+            title = "Wallpapers",
+            selectedIcon = Icons.Filled.ThumbUp,
+            unselectedIcon = Icons.Outlined.ThumbUp,
+            hasNews = false,
+            badgeCount = null
+        )
+    );
+    var selectedItemIndex by rememberSaveable {
+       mutableIntStateOf(0)
+    };
+
     Scaffold(
         topBar = {
             CustomTopAppBar()
@@ -63,39 +97,34 @@ fun ComposeBody(name: String, modifier: Modifier = Modifier) {
                 WallpaperCategoriesList()
 
             }
-        }
-    )
-}
-
-
-
-@ExperimentalMaterial3Api
-@Composable
-fun CustomTopAppBar(){
-    TopAppBar(
-        title = {
-            Text(
-                "Offline Wallpapers",
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                textAlign = TextAlign.Center
-            )
         },
-        navigationIcon = {
-            IconButton(onClick = { /* doSomething() */ }) {
-                Icon(
-                    imageVector = Icons.Filled.Menu,
-                    contentDescription = "Localized description"
-                )
-            }
-        },
-        actions = {
-            IconButton(onClick = { /* doSomething() */ }) {
-                Icon(
-                    imageVector = Icons.Filled.Favorite,
-                    contentDescription = "Localized description"
-                )
+        bottomBar = {
+            NavigationBar {
+                navigationItems.forEachIndexed { index, bottomNavigationBarItem ->  NavigationBarItem(
+                    selected = selectedItemIndex == index,
+                    onClick = {
+                        selectedItemIndex = index
+                    },
+                    label = {
+                            Text(text = bottomNavigationBarItem.title)
+                    },
+                    icon = {
+                        BadgedBox(badge = {
+                            if(bottomNavigationBarItem.badgeCount!=null){
+                                Text(text = bottomNavigationBarItem.badgeCount.toString())
+                            }
+                            else if(bottomNavigationBarItem.hasNews){
+                                Badge ()
+                            }
+                        }) {
+                            Icon(imageVector = if(index == selectedItemIndex){bottomNavigationBarItem.selectedIcon}else {bottomNavigationBarItem.unselectedIcon}, contentDescription = bottomNavigationBarItem.title)
+                        }
+                    },
+                )}
+
             }
         }
     )
 }
+
+
