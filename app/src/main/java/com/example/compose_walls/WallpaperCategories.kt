@@ -20,13 +20,16 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.compose_walls.navigation.Screen
 
 @Composable
-fun WallpaperCategoriesList() {
+fun WallpaperCategoriesList(navController: NavController) {
     LazyColumn{
         items(getWallpaperCategories()){
             category ->
-            WallpaperCategoryTile(category = category)
+            WallpaperCategoryTile(category = category, navController = navController)
         }
     }
       //List<WallpaperCategory> categories = getWallpaperCategories();
@@ -38,7 +41,8 @@ fun WallpaperCategoriesList() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WallpaperCategoryTile(category:WallpaperCategory, modifier: Modifier = Modifier) {
+fun WallpaperCategoryTile(navController: NavController,category:WallpaperCategory, modifier: Modifier = Modifier) {
+
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -46,7 +50,7 @@ fun WallpaperCategoryTile(category:WallpaperCategory, modifier: Modifier = Modif
             .background(MaterialTheme.colorScheme.background),
         onClick = {
             Log.d("Click", "CardExample: Card Click")
-
+            navController.navigate(Screen.WallpapersPage.withArgs(category.title))
         }
     ) {
         Column(
@@ -60,12 +64,12 @@ fun WallpaperCategoryTile(category:WallpaperCategory, modifier: Modifier = Modif
         }
     }
 }
-
-@Preview
-@Composable
-fun CenteredTextCardPreview() {
-    WallpaperCategoriesList()
-}
+//
+//@Preview
+//@Composable
+//fun CenteredTextCardPreview() {
+//    WallpaperCategoriesList()
+//}
 
 class WallpaperCategory(title: String){
    var title: String = title
