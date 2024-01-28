@@ -6,6 +6,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.compose_walls.FullWallpaperPage
 import com.example.compose_walls.HomePage
 import com.example.compose_walls.WallpaperCategoriesList
 import com.example.compose_walls.WallpapersPage
@@ -28,6 +29,18 @@ fun Navigation(navController: NavHostController){
             )
             ){entry ->
           WallpapersPage(navController,category = entry.arguments?.getString("category"))
+        }
+
+        composable(route = Screen.FullWallpaperPage.route + "/{wallpaper}",
+            arguments = listOf(
+                navArgument("wallpaper"){
+                    nullable = false
+                    type = NavType.StringType
+                }
+            )
+        ){entry ->
+            entry.arguments?.getString("wallpaper")
+                ?.let { FullWallpaperPage(navController, wallpaper = it) }
         }
     }
 }

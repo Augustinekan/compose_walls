@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -38,6 +39,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.compose_walls.navigation.Navigation
+import com.example.compose_walls.navigation.Screen
+import com.example.compose_walls.utils.ImageUtils
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,7 +49,7 @@ fun WallpapersPage(navController: NavController, category: String?){
         topBar = { if(category!=null){WallpapersPageTopAppBar(categoryTitle = category)} },
         content = {innerPadding ->  Surface (modifier = Modifier.padding(innerPadding)){
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
-                WallpapersGrid()
+                WallpapersGrid(navController = navController)
             }
         }
         }
@@ -54,8 +57,8 @@ fun WallpapersPage(navController: NavController, category: String?){
 }
 
 @Composable
-fun WallpapersGrid(){
-    Box(modifier = Modifier.fillMaxSize().padding(horizontal = 8.dp)){
+fun WallpapersGrid(navController: NavController){
+    Box(modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp)){
         LazyVerticalGrid(
 
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -63,19 +66,26 @@ fun WallpapersGrid(){
                 columns = GridCells.Fixed(2), content ={
             items(wallpaperList.size){index ->
                 
-                    WallpaperGridItem(wallpaper = wallpaperList[index])
+                    WallpaperGridItem(navController = navController, wallpaper = wallpaperList[index])
 
             }
         })
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("RestrictedApi")
 @Composable
-    fun WallpaperGridItem(wallpaper: String){
-    val imagePainter: Painter = painterResource(id = getResourceId(wallpaper))
+    fun WallpaperGridItem(navController: NavController,wallpaper: String){
+    val imagePainter: Painter = painterResource(id = ImageUtils().getResourceId(wallpaper))
 
-    Box (modifier = Modifier.clip(shape = RoundedCornerShape(4.dp)).aspectRatio(0.9F)){
+    Card(
+        modifier = Modifier.clip(shape = RoundedCornerShape(4.dp)).aspectRatio(0.9F),
+onClick = {
+navController.navigate(Screen.FullWallpaperPage.withArgs(wallpaper))
+},
+
+        ){
 
         Image(
 //            model = "file:///android_asset/images_folder/image.png",
@@ -83,19 +93,14 @@ fun WallpapersGrid(){
             painter = imagePainter, contentDescription = wallpaper,
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .padding(4.dp)
+                //.padding(4.dp)
                 .fillMaxSize().clip(shape = RoundedCornerShape(4.dp),
 
         ))
     }
     }
 
-@Composable
-private fun getResourceId(imageName: String): Int {
-    val context = LocalContext.current
-    val resources = context.resources
-    return resources.getIdentifier(imageName, "drawable", context.packageName)
-}
+
 
 val wallpaperList = listOf("cat","mountain","night","scene","sub","volcano");
 

@@ -7,6 +7,8 @@ sealed class Screen (val route: String){
 
     object WallpaperCategoriesList : Screen("categories")
 
+    object FullWallpaperPage : Screen("fullwallpaperpage")
+
     fun withArgs (vararg  args:String):String{
         return  buildString {
             append(route)
