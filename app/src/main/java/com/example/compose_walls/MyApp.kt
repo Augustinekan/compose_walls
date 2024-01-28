@@ -22,9 +22,3 @@ fun MyApp(name: String, modifier: Modifier = Modifier,navController: NavHostCont
     }
 }
 
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Preview
-//@Composable
-//fun MyAppPreview(){
-//    MyApp(name = "Compose App")
-//}
