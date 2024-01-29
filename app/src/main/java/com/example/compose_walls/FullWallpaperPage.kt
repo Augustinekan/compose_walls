@@ -35,7 +35,6 @@ fun FullWallpaperPage(navController: NavController, wallpaper: String) {
 
         Image(
             //            model = "file:///android_asset/images_folder/image.png",
-
             painter = imagePainter, contentDescription = wallpaper,
             contentScale = ContentScale.Crop,
             modifier = Modifier

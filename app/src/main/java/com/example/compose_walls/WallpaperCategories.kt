@@ -60,7 +60,7 @@ fun WallpaperCategoryTile(navController: NavController,category:WallpaperCategor
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            BasicText(text = category.title, style = MaterialTheme.typography.titleMedium)
+            Text(text = category.title, style = MaterialTheme.typography.titleMedium)
         }
     }
 }
